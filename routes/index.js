@@ -1,6 +1,8 @@
-const router = require('express').Router();
-const { Post } = require('../models'); // Adjust the path as needed
+const express = require('express');
+const router = express.Router();
+const Post = require('../models/Post');
 
+// Homepage route
 router.get('/', async (req, res) => {
   try {
     const posts = await Post.findAll(); // Retrieve all posts
