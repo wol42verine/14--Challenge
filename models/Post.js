@@ -28,10 +28,12 @@ Post.init(
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'createdAt', // Map to the database column name
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'updatedAt', // Map to the database column name
     },
   },
   {
@@ -41,7 +43,6 @@ Post.init(
     timestamps: true,
     freezeTableName: true,
     underscored: true,
-    modelName: 'Post',
   }
 );
 
