@@ -1,49 +1,28 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/connection'); // Ensure this path is correct
+const sequelize = require('../config/connection');
 
-class Post extends Model {}
+class User extends Model {}
 
-Post.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    content: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'User', // Ensure this matches the User model if it exists
-        key: 'id',
-      },
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      field: 'createdAt', // Map to the database column name
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      field: 'updatedAt', // Map to the database column name
-    },
+User.init({
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
   },
-  {
-    sequelize,
-    modelName: 'Post',
-    tableName: 'posts',
-    timestamps: true,
-    freezeTableName: true,
-    underscored: true,
-  }
-);
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+}, {
+  sequelize,
+  modelName: 'User',
+  tableName: 'users',
+  timestamps: true,  // Sequelize will handle created_at and updated_at fields
+});
 
-module.exports = Post;
+module.exports = User;
