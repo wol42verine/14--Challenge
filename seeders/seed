@@ -6,8 +6,8 @@ module.exports = {
       title: 'First Post',
       content: 'This is the content of the first post.',
       userId: 1,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
     }], {});
   },
 
