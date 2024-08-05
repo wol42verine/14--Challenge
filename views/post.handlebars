@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>{{post.title}}</title>
 </head>
+
 <body>
   <h1>{{post.title}}</h1>
   <p>{{post.content}}</p>
+  <p>Posted on: {{post.createdAt}}</p> <!-- Display the creation timestamp -->
 
   <!-- Display Comments -->
   <h2>Comments:</h2>
   {{#each post.comments}}
-    <div class="comment">
-      <p>{{content}}</p>
-    </div>
+  <div class="comment">
+    <p>{{content}}</p>
+  </div>
   {{/each}}
 
   <!-- Form to Add a Comment -->
@@ -30,4 +33,5 @@
   <!-- Back to Home Link -->
   <a href="/">Back to Home</a>
 </body>
+
 </html>

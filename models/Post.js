@@ -67,4 +67,5 @@ User.hasMany(Post, {
   foreignKey: 'userId',
 });
 
+
 module.exports = Post;
