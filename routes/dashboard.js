@@ -1,18 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const Post = require('../models/Post'); // Assuming you have a Post model
+const Post = require('../models/Post'); // Import your Post model
+const authMiddleware = require('../middleware/authMiddleware'); // Import your auth middleware
 
-// Ensure user is authenticated
-const withAuth = (req, res, next) => {
-  if (!req.session.user) {
-    return res.redirect('/login');
-  }
-  next();
-};
+// Ensure user is authenticated for all routes
+router.use(authMiddleware);
 
 // Dashboard route
-router.get('/', withAuth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const user = req.session.user;
     const posts = await Post.findAll({
@@ -30,7 +25,7 @@ router.get('/', withAuth, async (req, res) => {
 });
 
 // Handle creating a new post
-router.post('/new-post', withAuth, async (req, res) => {
+router.post('/new-post', async (req, res) => {
   const { title, content } = req.body;
   try {
     await Post.create({

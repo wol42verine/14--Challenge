@@ -19,12 +19,12 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
       allowNull: true,
       field: 'created_at', // Maps to snake_case column name
     },
-    updatedAt: {
+    updated_at: {
       type: DataTypes.DATE,
       allowNull: true,
       field: 'updated_at', // Maps to snake_case column name

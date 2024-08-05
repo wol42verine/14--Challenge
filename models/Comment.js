@@ -1,22 +1,26 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Post extends Model {}
+class Comment extends Model {}
 
-Post.init(
+Comment.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     content: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+    },
+    postId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Post',
+        key: 'id',
+      },
+      allowNull: false,
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -39,32 +43,11 @@ Post.init(
   },
   {
     sequelize,
-    modelName: 'Post',
-    tableName: 'posts',
+    modelName: 'Comment',
+    tableName: 'comments',
     timestamps: true,
     freezeTableName: true,
   }
 );
 
-// Define associations
-const User = require('./User');
-const Comment = require('./Comment');
-
-Post.hasMany(Comment, {
-  foreignKey: 'postId',
-  as: 'comments', // Use this alias
-});
-
-Comment.belongsTo(Post, {
-  foreignKey: 'postId',
-});
-
-Post.belongsTo(User, {
-  foreignKey: 'userId',
-});
-
-User.hasMany(Post, {
-  foreignKey: 'userId',
-});
-
-module.exports = Post;
+module.exports = Comment;

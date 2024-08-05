@@ -14,6 +14,13 @@
         <li><a href="/">Home</a></li>
         <li><a href="/posts">Dashboard</a></li>
         <li><a href="/login">Login</a></li>
+        {{#if user}}
+        <li>
+          <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+          </form>
+        </li>
+        {{/if}}
       </ul>
     </nav>
   </header>
@@ -21,12 +28,12 @@
   <main>
     <section id="posts">
       <h2>Recent Blog Posts</h2>
-{{#each posts}}
-  <div class="post">
-    <h2><a href="/post/{{this.id}}">{{this.title}}</a></h2>
-    <p>{{this.content}}</p>
-  </div>
-{{/each}}
+      {{#each posts}}
+        <div class="post">
+          <h2><a href="/post/{{this.id}}">{{this.title}}</a></h2>
+          <p>{{this.content}}</p>
+        </div>
+      {{/each}}
     </section>
   </main>
   

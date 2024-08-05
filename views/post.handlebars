@@ -6,6 +6,28 @@
 <body>
   <h1>{{post.title}}</h1>
   <p>{{post.content}}</p>
+
+  <!-- Display Comments -->
+  <h2>Comments:</h2>
+  {{#each post.comments}}
+    <div class="comment">
+      <p>{{content}}</p>
+    </div>
+  {{/each}}
+
+  <!-- Form to Add a Comment -->
+  <form action="/post/{{post.id}}/comments" method="POST">
+    <textarea name="content" placeholder="Add a comment" required></textarea>
+    <button type="submit">Add Comment</button>
+  </form>
+
+  <!-- Form to Delete the Post -->
+  <form action="/post/{{post.id}}" method="POST">
+    <input type="hidden" name="_method" value="DELETE"> <!-- To handle DELETE method -->
+    <button type="submit">Delete Post</button>
+  </form>
+
+  <!-- Back to Home Link -->
   <a href="/">Back to Home</a>
 </body>
 </html>

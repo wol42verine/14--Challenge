@@ -8,11 +8,15 @@ const sequelize = require('./config/connection');
 const authMiddleware = require('./middleware/authMiddleware'); // Import the middleware
 const app = express();
 const PORT = process.env.PORT || 3000;
+const methodOverride = require('method-override');
+const sessionTimeout = require('./middleware/sessionTimeout');
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method')); // Support for method overrides
+app.use(sessionTimeout);
 
 // Session management
 const sess = {
@@ -25,7 +29,14 @@ const sess = {
   }),
 };
 
-app.use(session(sess));
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { 
+    maxAge: 5 * 60 * 1000 // Set session timeout to 5 minutes (in milliseconds)
+  }
+}));
 
 // Handlebars setup
 const hbs = create({
