@@ -15,10 +15,11 @@ router.post('/login', async (req, res) => {
       return res.status(401).render('login', { error: 'Invalid username or password' });
     }
     
-    // Assuming you have a session or token-based authentication
-    req.session.user = user; // Or use a token-based approach
+    // Set session data
+    req.session.user = user; // Assuming session-based authentication
     
-    res.redirect('/'); // Redirect to the homepage or another route upon successful login
+    // Redirect to the Dashboard
+    res.redirect('/dashboard');
   } catch (error) {
     console.error(error);
     res.status(500).render('login', { error: 'An error occurred during login' });

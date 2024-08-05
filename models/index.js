@@ -13,8 +13,8 @@ const User = require('./User');
 const models = { Post, User };
 
 // Establish relationships if necessary
-Post.belongsTo(User, { foreignKey: 'user_id' });
-User.hasMany(Post, { foreignKey: 'user_id' });
+Post.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Post, { foreignKey: 'userId' });
 
 // Sync database
 sequelize.sync();
