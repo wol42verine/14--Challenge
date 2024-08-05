@@ -45,10 +45,12 @@ app.set('views', path.join(__dirname, 'views'));
 // Routes
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard'); // Import dashboard routes
+const postRoutes = require('./routes/post'); // Import post routes
 const mainRoutes = require('./routes'); // Ensure this points to the correct file
 
-app.use('/', authRoutes); // Authentication routes (e.g., login, signup)
 app.use('/dashboard', dashboardRoutes); // Dashboard routes
+app.use('/post', postRoutes); // Post routes (make sure this is correct)
+app.use('/', authRoutes); // Authentication routes (e.g., login, signup)
 app.use('/', mainRoutes); // Other routes (e.g., homepage)
 
 // Database connection

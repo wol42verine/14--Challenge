@@ -1,13 +1,20 @@
-const router = require('express').Router();
-const { Post } = require('../models'); // Adjust the path as needed
+// routes/post.js
+const express = require('express');
+const router = express.Router();
+const Post = require('../models/Post');
 
-router.get('/', async (req, res) => {
+// Route to get a specific post by ID
+router.get('/:id', async (req, res) => {
   try {
-    const posts = await Post.findAll(); // Retrieve all posts
-    res.render('homepage', { posts }); // Render the homepage view with posts
+    const post = await Post.findByPk(req.params.id);
+    if (post) {
+      res.render('post', { post });
+    } else {
+      res.status(404).render('404', { error: 'Post not found' });
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'An error occurred while fetching posts.' });
+    res.status(500).render('500', { error: 'An error occurred' });
   }
 });
 

@@ -12,7 +12,7 @@
     <nav>
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="/posts">Blog Posts</a></li>
+        <li><a href="/posts">Dashboard</a></li>
         <li><a href="/login">Login</a></li>
       </ul>
     </nav>
@@ -21,12 +21,12 @@
   <main>
     <section id="posts">
       <h2>Recent Blog Posts</h2>
-      {{#each posts}}
-        <article>
-          <h3><a href="/posts/{{id}}">{{title}}</a></h3>
-          <p>{{body}}</p>
-        </article>
-      {{/each}}
+{{#each posts}}
+  <div class="post">
+    <h2><a href="/post/{{this.id}}">{{this.title}}</a></h2>
+    <p>{{this.content}}</p>
+  </div>
+{{/each}}
     </section>
   </main>
   
