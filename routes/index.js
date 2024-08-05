@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
+const User = require('../models/User'); // Import User model
 
 // Homepage route
 router.get('/', async (req, res) => {
   try {
     const posts = await Post.findAll(); // Retrieve all posts
-    res.render('homepage', { posts }); // Render the homepage view with posts
+    const user = req.session.user; // Get the logged-in user from the session
+    res.render('homepage', { posts, user }); // Render the homepage view with posts and user
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while fetching posts.' });
@@ -21,13 +23,12 @@ router.get('/login', (req, res) => {
 // POST route for login handling
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  // Add your login logic here
-  // For example, authenticate the user and redirect or show an error message
   try {
     // Example authentication logic (replace with real logic)
     const user = await User.findOne({ where: { username } });
     if (user && user.password === password) {
       // Login successful
+      req.session.user = user; // Store user in session
       res.redirect('/'); // Redirect to homepage or another page
     } else {
       // Login failed

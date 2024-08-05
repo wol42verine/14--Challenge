@@ -6,37 +6,35 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const sequelize = require('./config/connection');
 const authMiddleware = require('./middleware/authMiddleware'); // Import the middleware
+const sessionTimeout = require('./middleware/sessionTimeout'); // Import the session timeout middleware
+const methodOverride = require('method-override');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
-const methodOverride = require('method-override');
-const sessionTimeout = require('./middleware/sessionTimeout');
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method')); // Support for method overrides
-app.use(sessionTimeout);
 
 // Session management
 const sess = {
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false },
+  cookie: {
+    maxAge: 5 * 60 * 1000, // Set session timeout to 5 minutes (in milliseconds)
+    secure: false, // Use true if HTTPS is enabled
+  },
   store: new SequelizeStore({
     db: sequelize,
   }),
 };
 
-app.use(session({
-  secret: 'your-secret-key',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { 
-    maxAge: 5 * 60 * 1000 // Set session timeout to 5 minutes (in milliseconds)
-  }
-}));
+app.use(session(sess)); // Apply session middleware
+
+app.use(sessionTimeout); // Apply session timeout middleware
 
 // Handlebars setup
 const hbs = create({
@@ -44,8 +42,8 @@ const hbs = create({
   extname: '.handlebars',
   runtimeOptions: {
     allowProtoPropertiesByDefault: true,
-    allowProtoMethodsByDefault: true
-  }
+    allowProtoMethodsByDefault: true,
+  },
 });
 
 app.engine('handlebars', hbs.engine);
@@ -58,9 +56,14 @@ const dashboardRoutes = require('./routes/dashboard');
 const postRoutes = require('./routes/post');
 const mainRoutes = require('./routes');
 
+// Public routes (e.g., login, signup)
+app.use('/login', authRoutes); // Authentication routes (e.g., login, signup)
+
+// Protected routes
 app.use('/dashboard', authMiddleware, dashboardRoutes); // Apply auth middleware to dashboard routes
-app.use('/post', postRoutes);
-app.use('/', authRoutes); // Authentication routes (e.g., login, signup)
+app.use('/post', authMiddleware, postRoutes); // Apply auth middleware to posts routes
+
+// Home route should be public
 app.use('/', mainRoutes); // Other routes (e.g., homepage)
 
 // Database connection
