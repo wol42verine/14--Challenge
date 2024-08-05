@@ -25,13 +25,33 @@
   </form>
 
   <!-- Form to Delete the Post -->
-  <form action="/post/{{post.id}}" method="POST">
-    <input type="hidden" name="_method" value="DELETE"> <!-- To handle DELETE method -->
-    <button type="submit">Delete Post</button>
-  </form>
+<button id="delete-post" data-id="{{post.id}}">Delete Post</button>
 
   <!-- Back to Home Link -->
   <a href="/">Back to Home</a>
-</body>
+ <script>
+    document.getElementById('delete-post').addEventListener('click', function() {
+      const postId = this.getAttribute('data-id');
 
+      fetch(`/post/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = '/dashboard'; // Redirect after successful deletion
+        } else {
+          return response.text().then(text => {
+            throw new Error(text);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error deleting post:', error);
+      });
+    });
+  </script>
+</body>
 </html>

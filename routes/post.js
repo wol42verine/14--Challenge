@@ -36,10 +36,10 @@ router.delete('/:id', async (req, res) => {
     });
 
     if (result === 0) {
-      return res.status(404).render('404', { error: 'Post not found' });
+      return res.status(404).send('Post not found');
     }
 
-    res.redirect('/dashboard'); // Redirect to the dashboard or another page
+    res.status(200).send('Post deleted successfully');
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred while deleting the post');

@@ -18,4 +18,9 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.delete('/:id', (req, res) => {
+  console.log(`DELETE request to /post/${req.params.id}`); // Debug log
+  // your existing code
+});
+
 module.exports = router;
