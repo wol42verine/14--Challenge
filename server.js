@@ -1,11 +1,11 @@
-require('dotenv').config();
-
+// server.js
 const express = require('express');
-const { create } = require('express-handlebars'); // Import the create function
+const { create } = require('express-handlebars');
 const path = require('path');
 const session = require('express-session');
-const SequelizeStore = require('connect-session-sequelize')(session.Store); // Import Sequelize store
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const sequelize = require('./config/connection');
+const authMiddleware = require('./middleware/authMiddleware'); // Import the middleware
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -16,10 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Session management
 const sess = {
-  secret: process.env.SESSION_SECRET || 'your-secret-key', // Replace with a strong secret key
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }, // Set to true if using HTTPS
+  cookie: { secure: false },
   store: new SequelizeStore({
     db: sequelize,
   }),
@@ -37,19 +37,18 @@ const hbs = create({
   }
 });
 
-// Set up Handlebars as the view engine
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routes
 const authRoutes = require('./routes/auth');
-const dashboardRoutes = require('./routes/dashboard'); // Import dashboard routes
-const postRoutes = require('./routes/post'); // Import post routes
-const mainRoutes = require('./routes'); // Ensure this points to the correct file
+const dashboardRoutes = require('./routes/dashboard');
+const postRoutes = require('./routes/post');
+const mainRoutes = require('./routes');
 
-app.use('/dashboard', dashboardRoutes); // Dashboard routes
-app.use('/post', postRoutes); // Post routes (make sure this is correct)
+app.use('/dashboard', authMiddleware, dashboardRoutes); // Apply auth middleware to dashboard routes
+app.use('/post', postRoutes);
 app.use('/', authRoutes); // Authentication routes (e.g., login, signup)
 app.use('/', mainRoutes); // Other routes (e.g., homepage)
 
