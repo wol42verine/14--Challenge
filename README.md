@@ -35,7 +35,7 @@ The application will be available at
 
 # Demo
 To see a demonstration of how the application works, watch the video below:
-<video controls src="public/14-Demo.mp4" title="14-Demo"></video>
+[view the demo video directly](public/14-Demo.mp4)
 
 # Contributing
 If you would like to contribute to the project, please fork the repository and submit a pull request with your changes. Ensure that your code follows the existing style and includes appropriate tests.
