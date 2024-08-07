@@ -25,13 +25,16 @@
   </form>
 
   <!-- Form to Delete the Post -->
-<button id="delete-post" data-id="{{post.id}}">Delete Post</button>
+  <button id="delete-post" data-id="{{post.id}}">Delete Post</button>
 
   <!-- Back to Home Link -->
   <a href="/">Back to Home</a>
- <script>
-    document.getElementById('delete-post').addEventListener('click', function() {
+
+  <script>
+    document.getElementById('delete-post').addEventListener('click', function () {
       const postId = this.getAttribute('data-id');
+
+console.log(`Attempting to delete post with ID: ${postId}`); // Debugging line
 
       fetch(`/post/${postId}`, {
         method: 'DELETE',
@@ -39,19 +42,21 @@
           'Content-Type': 'application/json',
         },
       })
-      .then(response => {
-        if (response.ok) {
-          window.location.href = '/dashboard'; // Redirect after successful deletion
-        } else {
-          return response.text().then(text => {
-            throw new Error(text);
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error deleting post:', error);
-      });
+        .then(response => {
+          console.log('Response status:', response.status); // Debugging line
+          if (response.ok) {
+            window.location.href = '/dashboard'; // Redirect after successful deletion
+          } else {
+            return response.text().then(text => {
+              throw new Error(text);
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting post:', error);
+        });
     });
   </script>
 </body>
+
 </html>
