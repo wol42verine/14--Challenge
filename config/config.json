@@ -3,21 +3,21 @@
       "username": "postgres",
       "password": "kaen42",
       "database": "skunkworks",
-      "host": "localhost",
+      "host": "onrender.com",
       "dialect": "postgres"
     },
     "test": {
       "username": "postgres",
       "password": "kaen42",
       "database": "skunkworks_test",
-      "host": "localhost",
+      "host": "onrender.com",
       "dialect": "postgres"
     },
     "production": {
       "username": "postgres",
       "password": "kaen42",
       "database": "skunkworks_production",
-      "host": "localhost",
+      "host": "onrender.com",
       "dialect": "postgres"
     }
   }
