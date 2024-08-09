@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
+app.use(methodOverride('_method')); // Support for method overrides
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method')); // Support for method overrides
 
@@ -39,9 +39,17 @@ app.use(session(sess));
 app.use(sessionTimeout); // Apply session timeout middleware
 
 // Handlebars setup
-const hbs = create({ /* config */ });
+const hbs = create({
+  defaultLayout: 'main',
+  extname: '.handlebars',
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true,
+  },
+});
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views'));
 
 // Routes
 const dashboardRoutes = require('./routes/dashboard');
@@ -50,13 +58,10 @@ const authRoutes = require('./routes/auth'); // Import auth routes
 
 // Public routes (e.g., login, signup)
 app.use('/', authRoutes); // Authentication routes (e.g., login, signup)
-app.use(dashboardRoutes);
-app.use(authRoutes);
 
 // Protected routes
-app.use('/dashboard', authMiddleware, dashboardRoutes); // Apply auth middleware to dashboard routes
+app.use('/dashboard', authRoutes); // Authentication routes (e.g., login, signup)
 app.use('/post', authMiddleware, postRoutes); // Apply auth middleware to posts routes
-
 
 // Database connection and synchronization
 sequelize.authenticate()

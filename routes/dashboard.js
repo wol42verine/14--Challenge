@@ -7,7 +7,7 @@ const authMiddleware = require('../middleware/authMiddleware'); // Import your a
 router.use(authMiddleware);
 
 // Dashboard route
-router.get('/dashboard', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const user = await User.findByPk(req.session.userId);
     const posts = await Post.findAll({

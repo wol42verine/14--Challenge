@@ -34,9 +34,10 @@
     </div>
   </main>
   
-  {{#if error}}
-  <div class="error">{{error}}</div>
-{{/if}}
+    {{#if (query.error)}}
+    <div class="error">{{query.error}}</div>
+    {{/if}}
+  </main>
 
   <footer>
     <p>&copy; 2024 My Skunkworks. All rights reserved.</p>

@@ -1,23 +1,11 @@
 const express = require('express');
-const session = require('express-session');
+// const session = require('express-session');
 const router = express.Router();
 const User = require('../models/User'); // Assuming you have a User model
 const bcrypt = require('bcrypt'); // For password hashing
 const dotenv = require('dotenv');
 
 dotenv.config(); // Load environment variables from .env file
-
-// Middleware setup
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
-router.use(session({
-  secret: '17011701', // Replace with your secret key
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
-}));
-
-console.log('Middleware setup complete');
 
 // Handle login
 router.post('/login', async (req, res) => {
