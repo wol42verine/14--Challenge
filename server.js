@@ -34,44 +34,29 @@ const sess = {
   }),
 };
 
-app.use(session(sess)); // Apply session middleware
+app.use(session(sess));
 
 app.use(sessionTimeout); // Apply session timeout middleware
 
 // Handlebars setup
-const hbs = create({
-  defaultLayout: 'main',
-  extname: '.handlebars',
-  runtimeOptions: {
-    allowProtoPropertiesByDefault: true,
-    allowProtoMethodsByDefault: true,
-  },
-});
-
+const hbs = create({ /* config */ });
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, 'views'));
 
 // Routes
-const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
-const postRoutes = require('./routes/post');
-const mainRoutes = require('./routes');
+const postRoutes = require('./routes/post'); // Import post routes
+const authRoutes = require('./routes/auth'); // Import auth routes
 
 // Public routes (e.g., login, signup)
-app.use('/login', authRoutes); // Authentication routes (e.g., login, signup)
+app.use('/', authRoutes); // Authentication routes (e.g., login, signup)
+app.use(dashboardRoutes);
+app.use(authRoutes);
 
 // Protected routes
 app.use('/dashboard', authMiddleware, dashboardRoutes); // Apply auth middleware to dashboard routes
 app.use('/post', authMiddleware, postRoutes); // Apply auth middleware to posts routes
 
-// Home route should be public
-app.use('/', mainRoutes); // Other routes (e.g., homepage)
-
-// Database connection
-// sequelize.authenticate()
-//   .then(() => console.log('Database connected...'))
-//   .catch(err => console.error('Database connection error:', err));
 
 // Database connection and synchronization
 sequelize.authenticate()

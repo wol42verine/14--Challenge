@@ -1,26 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/Post'); // Import your Post model
+const { Post, User } = require('../models');
 const authMiddleware = require('../middleware/authMiddleware'); // Import your auth middleware
 
 // Ensure user is authenticated for all routes
 router.use(authMiddleware);
 
 // Dashboard route
-router.get('/', async (req, res) => {
+router.get('/dashboard', async (req, res) => {
   try {
-    const user = req.session.user;
+    const user = await User.findByPk(req.session.userId);
     const posts = await Post.findAll({
-      where: { userId: user.id }, // Adjust according to your model relationship
+      where: { userId: req.session.userId },
+      include: [User],
     });
 
-    res.render('dashboard', {
-      user,
-      posts,
-    });
+    res.render('dashboard', { posts });
   } catch (error) {
-    console.error(error);
-    res.status(500).render('dashboard', { error: 'An error occurred while loading the dashboard' });
+    console.error('Dashboard error:', error);
+    res.status(500).render('dashboard', { error: 'An error occurred while fetching posts' });
   }
 });
 
@@ -31,7 +29,7 @@ router.post('/new-post', async (req, res) => {
     await Post.create({
       title,
       content,
-      userId: req.session.user.id, // Adjust according to your model relationship
+      userId: req.session.userId, // Adjust according to your model relationship
     });
     res.redirect('/dashboard');
   } catch (error) {

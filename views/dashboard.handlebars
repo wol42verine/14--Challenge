@@ -19,12 +19,17 @@
   </header>
   
   <main>
-    <h2>Your Blog Posts</h2>
-    <ul>
-      {{#each posts}}
-        <li>{{this.title}} - {{this.content}}</li>
-      {{/each}}
-    </ul>
+<h1>Dashboard</h1>
+
+{{#if posts.length}}
+  <ul>
+    {{#each posts}}
+      <li>{{this.title}} - {{this.content}}</li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No posts found.</p>
+{{/if}}
 
     <h2>Create a New Post</h2>
     <form action="/dashboard/new-post" method="POST">
