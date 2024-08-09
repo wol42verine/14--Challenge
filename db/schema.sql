@@ -1,4 +1,6 @@
 -- db/schema.sql
+DROP DATABASE IF EXISTS skunkworks;
+CREATE DATABASE skunkworks;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,

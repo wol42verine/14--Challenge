@@ -7,16 +7,17 @@ Post.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
+      allowNull: false,
       primaryKey: true,
+      autoIncrement: true,
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     content: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -24,48 +25,15 @@ Post.init(
         model: 'User',
         key: 'id',
       },
-      allowNull: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'created_at',
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'updated_at',
     },
   },
   {
     sequelize,
-    modelName: 'Post',
-    tableName: 'posts',
     timestamps: true,
     freezeTableName: true,
+    underscored: true,
+    modelName: 'Post',
   }
 );
-
-// Define associations
-const User = require('./User');
-const Comment = require('./Comment');
-
-Post.hasMany(Comment, {
-  foreignKey: 'postId',
-  as: 'comments', // Use this alias
-});
-
-Comment.belongsTo(Post, {
-  foreignKey: 'postId',
-});
-
-Post.belongsTo(User, {
-  foreignKey: 'userId',
-});
-
-User.hasMany(Post, {
-  foreignKey: 'userId',
-});
-
 
 module.exports = Post;

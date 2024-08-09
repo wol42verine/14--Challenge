@@ -7,35 +7,34 @@ User.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
+      allowNull: false,
       primaryKey: true,
+      autoIncrement: true,
     },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'created_at', // Maps to snake_case column name
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'updated_at', // Maps to snake_case column name
-    },
   },
   {
     sequelize,
+    timestamps: true,
+    freezeTableName: true,
+    underscored: true,
     modelName: 'User',
-    tableName: 'users',
-    timestamps: true, // Ensure timestamps are enabled
-    underscored: true, // Use snake_case for columns
   }
 );
 

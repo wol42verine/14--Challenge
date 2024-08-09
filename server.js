@@ -8,6 +8,8 @@ const sequelize = require('./config/connection');
 const authMiddleware = require('./middleware/authMiddleware'); // Import the middleware
 const sessionTimeout = require('./middleware/sessionTimeout'); // Import the session timeout middleware
 const methodOverride = require('method-override');
+const { User, Post } = require('./models'); // Import models and associations
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -67,11 +69,26 @@ app.use('/post', authMiddleware, postRoutes); // Apply auth middleware to posts 
 app.use('/', mainRoutes); // Other routes (e.g., homepage)
 
 // Database connection
-sequelize.authenticate()
-  .then(() => console.log('Database connected...'))
-  .catch(err => console.error('Database connection error:', err));
+// sequelize.authenticate()
+//   .then(() => console.log('Database connected...'))
+//   .catch(err => console.error('Database connection error:', err));
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Database connection and synchronization
+sequelize.authenticate()
+  .then(() => {
+    console.log('Database connected...');
+
+    // Synchronize the database
+    return sequelize.sync({ force: false }); // Use { force: true } to drop and recreate tables
+  })
+  .then(() => {
+    console.log('Database synchronized');
+
+    // Start server
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('Database connection error:', err);
+  });
