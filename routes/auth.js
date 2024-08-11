@@ -1,34 +1,38 @@
 const express = require('express');
-const session = require('express-session');
 const router = express.Router();
-const User = require('../models/User'); // Assuming you have a User model
-const bcrypt = require('bcrypt'); // For password hashing
-const dotenv = require('dotenv');
-
-dotenv.config(); // Load environment variables from .env file
+const bcrypt = require('bcrypt');
+const { User } = require('../models');
 
 // Handle login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    console.log('Login attempt:', { username });
+    console.log('Login attempt:', { username, password });
 
     const user = await User.findOne({ where: { username } });
 
     if (!user) {
+      console.log('User not found:', username);
       return res.status(400).render('login', { error: 'Invalid username or password' });
     }
-    console.log('User found:', user.username);
 
+    console.log('User found:', user.username);
+    console.log('Stored hashed password:', user.password);
+    console.log('Comparing password:', password);
+    console.log('Stored hash:', user.password);
     const validPassword = await bcrypt.compare(password, user.password);
+    console.log('Password valid:', validPassword);
 
     if (!validPassword) {
+      console.log('Invalid password for user:', username);
       return res.status(400).render('login', { error: 'Invalid username or password' });
     }
-    console.log('Login successful for user:', user.username);
 
     req.session.userId = user.id;
+    console.log('Session ID:', req.session.id);
+    console.log('Login successful for user:', user.username);
+
     res.redirect('/dashboard');
   } catch (error) {
     console.error('Login error:', error);
@@ -44,7 +48,6 @@ router.get('/signup', (req, res) => {
 
 router.post('/signup', async (req, res) => {
   console.log('POST /signup route hit'); // Debug log
-
   const { username, password } = req.body;
 
   try {
@@ -64,7 +67,7 @@ router.post('/signup', async (req, res) => {
     // Create a new user
     await User.create({ username, password: hashedPassword });
 
-    console.log('User signed up:', username);
+    console.log('User signed up:', username, password);
 
     res.redirect('/login'); // Redirect to the login page after successful sign-up
   } catch (error) {
@@ -75,13 +78,15 @@ router.post('/signup', async (req, res) => {
 
 // Handle logout
 router.post('/logout', (req, res) => {
+  console.log('POST /logout route hit');
   req.session.destroy(err => {
     if (err) {
-      console.error('Error destroying session:', err);
-      return res.status(500).render('error', { error: 'An error occurred during logout' });
+      console.error('Logout error:', err);
+      return res.status(500).send('An error occurred during logout');
     }
-    res.redirect('/login'); // Redirect to login page after logout
+    res.redirect('/login');
   });
 });
 
 module.exports = router;
+

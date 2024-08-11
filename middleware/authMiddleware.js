@@ -1,9 +1,10 @@
 const authMiddleware = (req, res, next) => {
+  console.log('Auth Middleware:', req.session.userId);
   if (req.session.userId) {
-    return next(); // User is logged in, proceed to the next middleware or route
+    return next(); // User is authenticated, proceed to the next middleware
+  } else {
+    res.redirect('/login'); // Redirect to login if not authenticated
   }
-  // User is not logged in, redirect to the login page with a message
-  res.redirect('/login'); // Use redirect instead of rendering the login page with an error message
 };
 
 module.exports = authMiddleware;

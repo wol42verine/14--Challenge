@@ -21,23 +21,23 @@ router.get('/login', (req, res) => {
 });
 
 // POST route for login handling
-router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    // Example authentication logic (replace with real logic)
-    const user = await User.findOne({ where: { username } });
-    if (user && user.password === password) {
-      // Login successful
-      req.session.user = user; // Store user in session
-      res.redirect('/'); // Redirect to homepage or another page
-    } else {
-      // Login failed
-      res.status(401).render('login', { error: 'Invalid username or password' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'An error occurred during login.' });
-  }
-});
+// router.post('/login', async (req, res) => {
+//   const { username, password } = req.body;
+//   try {
+//     // Example authentication logic (replace with real logic)
+//     const user = await User.findOne({ where: { username } });
+//     if (user && user.password === password) {
+//       // Login successful
+//       req.session.user = user; // Store user in session
+//       res.redirect('/dashboard'); // Redirect to homepage or another page
+//     } else {
+//       // Login failed
+//       res.status(401).render('login', { error: 'Invalid username or password' });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'An error occurred during login.' });
+//   }
+// });
 
 module.exports = router;
