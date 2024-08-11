@@ -8,8 +8,11 @@ const sequelize = require('./config/connection');
 const authMiddleware = require('./middleware/authMiddleware'); // Import the middleware
 const sessionTimeout = require('./middleware/sessionTimeout'); // Import the session timeout middleware
 const methodOverride = require('method-override');
+const indexRoutes = require('./routes/index'); // Import index routes
 const { User, Post } = require('./models'); // Import models and associations
-
+const dashboardRoutes = require('./routes/dashboard');
+const postRoutes = require('./routes/post');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method')); // Support for method overrides
 app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method')); // Support for method overrides
+app.use(express.json()); // Ensure this line is present if you're using JSON request bodies
 
 // Session management
 const sess = {
@@ -52,16 +55,10 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routes
-const dashboardRoutes = require('./routes/dashboard');
-const postRoutes = require('./routes/post'); // Import post routes
-const authRoutes = require('./routes/auth'); // Import auth routes
-
-// Public routes (e.g., login, signup)
-app.use('/', authRoutes); // Authentication routes (e.g., login, signup)
-
-// Protected routes
-app.use('/dashboard', authRoutes); // Authentication routes (e.g., login, signup)
-app.use('/post', authMiddleware, postRoutes); // Apply auth middleware to posts routes
+app.use('/', indexRoutes); // Handles homepage and other routes
+app.use('/dashboard', authMiddleware, dashboardRoutes); // Protected dashboard routes
+app.use('/post', authMiddleware, postRoutes); // Protected post routes
+app.use('/auth', authRoutes); // Authentication routes
 
 // Database connection and synchronization
 sequelize.authenticate()

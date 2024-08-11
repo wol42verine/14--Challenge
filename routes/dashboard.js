@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     const user = await User.findByPk(req.session.userId);
     const posts = await Post.findAll({
       where: { userId: req.session.userId },
-      include: [User],
+      include: [User], // Include user if necessary
     });
 
     res.render('dashboard', { posts });

@@ -1,5 +1,5 @@
 const express = require('express');
-// const session = require('express-session');
+const session = require('express-session');
 const router = express.Router();
 const User = require('../models/User'); // Assuming you have a User model
 const bcrypt = require('bcrypt'); // For password hashing
@@ -12,17 +12,21 @@ router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    console.log('Login attempt:', { username });
+
     const user = await User.findOne({ where: { username } });
 
     if (!user) {
       return res.status(400).render('login', { error: 'Invalid username or password' });
     }
+    console.log('User found:', user.username);
 
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
       return res.status(400).render('login', { error: 'Invalid username or password' });
     }
+    console.log('Login successful for user:', user.username);
 
     req.session.userId = user.id;
     res.redirect('/dashboard');
@@ -39,6 +43,8 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
+  console.log('POST /signup route hit'); // Debug log
+
   const { username, password } = req.body;
 
   try {
