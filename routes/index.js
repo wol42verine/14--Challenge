@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
-const User = require('../models/User'); // Import User model
+const Comment = require('../models/Comment');
+const authMiddleware = require('../middleware/authMiddleware');
 
 // Homepage route
 router.get('/', async (req, res) => {

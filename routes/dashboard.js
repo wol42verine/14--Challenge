@@ -23,18 +23,21 @@ router.get('/', async (req, res) => {
 });
 
 // Handle creating a new post
-router.post('/new-post', async (req, res) => {
+router.post('/create', async (req, res) => {
   const { title, content } = req.body;
+  const userId = req.session.user.id; // Ensure this is correctly set
+
   try {
-    await Post.create({
+    const newPost = await Post.create({
       title,
       content,
-      userId: req.session.userId, // Adjust according to your model relationship
+      userId, // Use the user ID from the session
     });
-    res.redirect('/dashboard');
+
+    res.status(201).json(newPost);
   } catch (error) {
     console.error(error);
-    res.status(500).render('dashboard', { error: 'An error occurred while creating the post' });
+    res.status(500).json({ error: 'An error occurred while creating the post' });
   }
 });
 

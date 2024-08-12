@@ -1,12 +1,19 @@
-// routes/post.js
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 
 // Route to get a specific post by ID
 router.get('/:id', async (req, res) => {
   try {
-    const post = await Post.findByPk(req.params.id);
+    const post = await Post.findByPk(req.params.id, {
+      include: [
+        {
+          model: Comment,
+          as: 'comments', // Ensure this matches the alias used in the association
+        },
+      ],
+    });
     if (post) {
       res.render('post', { post });
     } else {

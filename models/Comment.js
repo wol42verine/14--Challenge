@@ -40,7 +40,14 @@ Comment.init(
       allowNull: true,
       field: 'updated_at',
     },
+  post_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'post',
+      key: 'id',
+    },
   },
+},
   {
     sequelize,
     modelName: 'Comment',

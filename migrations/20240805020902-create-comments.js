@@ -5,6 +5,7 @@ module.exports = {
     await queryInterface.createTable('comments', {
       id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
@@ -12,29 +13,32 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      postId: {
+      post_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'posts',
-          key: 'id',
+          model: 'posts', // Name of the target table
+          key: 'id', // Key in the target table
         },
+        onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         allowNull: false,
       },
-      userId: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'users',
-          key: 'id',
+          model: 'users', // Name of the target table
+          key: 'id', // Key in the target table
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
         allowNull: false,
       },
-      created_at: {
+      createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
-      updated_at: {
+      updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,

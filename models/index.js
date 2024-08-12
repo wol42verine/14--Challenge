@@ -1,22 +1,33 @@
-require('dotenv').config();
+const User = require('./User');
+const Post = require('./Post');
+const Comment = require('./Comment');
 
-const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres', // or your database dialect
-  logging: false, // disable logging; default: console.log
+// Define associations
+User.hasMany(Post, {
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE',
 });
 
-const Post = require('./Post');
-const User = require('./User');
+Post.belongsTo(User, {
+  foreignKey: 'user_id',
+});
 
-// Initialize models
-const models = { Post, User };
+Post.hasMany(Comment, {
+  foreignKey: 'post_id',
+  as: 'comments', // Define alias here
+  onDelete: 'CASCADE',
+});
 
-// Establish relationships if necessary
-User.hasMany(Post, { foreignKey: 'userId' });
-Post.belongsTo(User, { foreignKey: 'userId' });
+Comment.belongsTo(Post, {
+  foreignKey: 'post_id',
+});
 
-// Sync database
-sequelize.sync();
+Comment.belongsTo(User, {
+  foreignKey: 'user_id',
+});
 
-module.exports = { sequelize, ...models };
+User.hasMany(Comment, {
+  foreignKey: 'user_id',
+});
+
+module.exports = { User, Post, Comment };

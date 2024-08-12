@@ -16,10 +16,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      userId: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'users', // Ensure this matches the name of your user table
+          model: 'users',
           key: 'id',
         },
         allowNull: false,
@@ -27,12 +27,12 @@ module.exports = {
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW, // Default to current date
+        defaultValue: Sequelize.NOW,
       },
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW, // Default to current date
+        defaultValue: Sequelize.NOW,
       },
     });
   },
